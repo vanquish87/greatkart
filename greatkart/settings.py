@@ -73,6 +73,10 @@ TEMPLATES = [
 
                 # for showing category menu in navbar
                 'category.context_processors.menu_links',
+
+                # for showing quantity of cart items in navbar
+                'cart.context_processors.counter',
+
             ],
         },
     },
