@@ -30,7 +30,7 @@ class MyAccountManager(BaseUserManager):
             first_name=first_name,
             last_name=last_name,
             username=username,
-            email=self.normalize_email(email),
+            email=email,
             password=password,
         )
 
@@ -62,7 +62,7 @@ class Account(AbstractBaseUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
 
-    # tell model that we are using this model to create user n superadmin
+    # tell model that we are using this Class to create user n superadmin
     objects = MyAccountManager()
 
     def __str__(self):
