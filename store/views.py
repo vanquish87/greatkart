@@ -20,6 +20,9 @@ def store(request, category_slug=None):
             category=categories,
             is_available=True
             ).order_by('id')
+        # products = get_list_or_404(Product,
+        #  category=categories, is_available=True)
+
     else:
         products = Product.objects.all().filter(
             is_available=True
