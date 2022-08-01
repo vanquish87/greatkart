@@ -1,3 +1,4 @@
+from genericpath import exists
 from django.shortcuts import redirect, render, get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
 from cart.models import Cart, CartItem
@@ -24,7 +25,7 @@ def add_cart(request, product_id):
         # size = request.POST['size']
         for item in request.POST:
             key = item
-            value = request.POST['key']
+            value = request.POST[key]
 
             try:
                 variation = Variation.objects.get(
@@ -43,17 +44,57 @@ def add_cart(request, product_id):
         cart = Cart.objects.create(cart_id=_cart_id(request))
         cart.save()
 
+    is_cart_item_exists = CartItem.objects.filter(product=product, cart=cart).exists()
     # add items to cart or create cart items
-    try:
-        cart_item = CartItem.objects.get(product=product, cart=cart)
-        cart_item.quantity += 1
-        cart_item.save()
-    except CartItem.DoesNotExist:
+    if is_cart_item_exists:
+        cart_item = CartItem.objects.filter(product=product, cart=cart)
+        ex_var_list = []
+        id = []
+        # check for existing variations in selected cart_item
+        for item in cart_item:
+            # manytomany relationship called
+            # it will make a queryset like color:blue n size:small
+            # <QuerySet [<Variation: Yellow>, <Variation: large>]>
+            existing_variation = item.variations.all()
+            ex_var_list.append(list(existing_variation))
+            id.append(item.id)
+
+        # import pdb; pdb.set_trace()
+
+        # check if new added variation is in existing variation list
+        if product_variation in ex_var_list:
+            # increase the cart_item quantity
+            # we are finding index value of product_variation that exists
+            # in ex_var_list n fing that cart_item
+            index = ex_var_list.index(product_variation)
+            item_id = id[index]
+            item = CartItem.objects.get(product=product, id=item_id)
+            item.quantity += 1
+            item.save()
+
+        # check if new added variation is actually new
+        elif len(product_variation) > 0:
+            item = CartItem.objects.create(
+                product=product,
+                quantity=1,
+                cart=cart,
+                )
+            item.variations.clear()
+            # to add all product_variation ek saath
+            item.variations.add(*product_variation)
+
+            item.save()
+    else:
         cart_item = CartItem.objects.create(
             product=product,
             quantity=1,
             cart=cart,
         )
+
+        if len(product_variation) > 0:
+            cart_item.variations.clear()
+            item.variations.add(*product_variation)
+
         cart_item.save()
 
     return redirect('cart')
