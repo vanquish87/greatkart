@@ -10,12 +10,12 @@ urlpatterns = [
         name='add-cart'
         ),
     path(
-        'minus-cart/<int:product_id>/',
+        'minus-cart/<int:product_id>/<int:cart_item_id>/',
         views.minus_cart,
         name='minus-cart'
         ),
     path(
-        'remove-cart/<int:product_id>/',
+        'remove-cart/<int:product_id>/<int:cart_item_id>/',
         views.remove_cart,
         name='remove-cart'
         ),
