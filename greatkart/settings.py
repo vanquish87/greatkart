@@ -149,3 +149,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # custom user model that we declared in accounts.models
 AUTH_USER_MODEL = 'accounts.Account'
+
+# message tags - many of them already incuded in django -- read django docs
+from django.contrib.messages import constants as messages
+MESSAGE_TAGS = {
+    messages.WARNING: 'warning',
+    messages.SUCCESS: 'success',
+    messages.INFO: 'info',
+    messages.ERROR: 'danger',
+}
