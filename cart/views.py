@@ -1,4 +1,3 @@
-from genericpath import exists
 from django.shortcuts import redirect, render, get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
 from cart.models import Cart, CartItem
@@ -44,7 +43,10 @@ def add_cart(request, product_id):
         cart = Cart.objects.create(cart_id=_cart_id(request))
         cart.save()
 
-    is_cart_item_exists = CartItem.objects.filter(product=product, cart=cart).exists()
+    is_cart_item_exists = CartItem.objects.filter(
+            product=product,
+            cart=cart
+            ).exists()
     # add items to cart or create cart items
     if is_cart_item_exists:
         cart_item = CartItem.objects.filter(product=product, cart=cart)
@@ -106,14 +108,18 @@ def minus_cart(request, product_id, cart_item_id):
     cart = Cart.objects.get(cart_id=_cart_id(request))
     product = get_object_or_404(Product, id=product_id)
     try:
-        cart_item = CartItem.objects.get(product=product, cart=cart, id=cart_item_id)
+        cart_item = CartItem.objects.get(
+            product=product,
+            cart=cart,
+            id=cart_item_id
+            )
         if cart_item.quantity > 1:
             cart_item.quantity -= 1
             cart_item.save()
         else:
             cart_item.delete()
-    except:
-        pass
+    except CartItem.DoesNotExist:
+        return 'cannot minus a item'
     return redirect('cart')
 
 
@@ -121,7 +127,11 @@ def minus_cart(request, product_id, cart_item_id):
 def remove_cart(request, product_id, cart_item_id):
     cart = Cart.objects.get(cart_id=_cart_id(request))
     product = get_object_or_404(Product, id=product_id)
-    cart_item = CartItem.objects.get(product=product, cart=cart, id=cart_item_id)
+    cart_item = CartItem.objects.get(
+        product=product,
+        cart=cart,
+        id=cart_item_id
+        )
     cart_item.delete()
 
     return redirect('cart')
