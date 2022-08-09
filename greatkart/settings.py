@@ -158,3 +158,12 @@ MESSAGE_TAGS = {
     messages.INFO: 'info',
     messages.ERROR: 'danger',
 }
+
+
+# SMTP configuration
+EMAIL_HOST = 'smtppro.zoho.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'admin@shutupnwait.com'
+EMAIL_HOST_PASSWORD = 'v@lue)67e4'
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'admin@shutupnwait.com'

@@ -1,6 +1,3 @@
-from dataclasses import fields
-from re import A
-from tkinter import W
 from django import forms
 from .models import Account
 
@@ -15,17 +12,34 @@ class RegistrationForm(forms.ModelForm):
 
     class Meta:
         model = Account
-        fields = ['first_name', 'last_name', 'email', 'phone_number', 'password']
+        fields = [
+            'first_name',
+            'last_name',
+            'email',
+            'phone_number',
+            'password'
+            ]
 
     # with this we are modifying classes in html for form
     # didn't understand much, advanced concept
     def __init__(self, *args, **kwargs):
         super(RegistrationForm, self).__init__(*args, **kwargs)
 
-        self.fields['first_name'].widget.attrs['placeholder'] = 'Enter First name'
-        self.fields['last_name'].widget.attrs['placeholder'] = 'Enter Last name'
-        self.fields['phone_number'].widget.attrs['placeholder'] = 'Enter phone number'
-        self.fields['email'].widget.attrs['placeholder'] = 'Enter email address'
+        self.fields['first_name'].widget.attrs['placeholder'] = (
+                                                'Enter First name'
+                                                )
+
+        self.fields['last_name'].widget.attrs['placeholder'] = (
+                                                'Enter Last name'
+                                                )
+
+        self.fields['phone_number'].widget.attrs['placeholder'] = (
+                                            'Enter phone number'
+                                            )
+
+        self.fields['email'].widget.attrs['placeholder'] = (
+                                            'Enter email address'
+                                            )
 
         # to avoid repetition for every field
         for field in self.fields:
