@@ -65,6 +65,9 @@ class Account(AbstractBaseUser):
     # tell model that we are using this Class to create user n superadmin
     objects = MyAccountManager()
 
+    def full_name(self):
+        return f'{self.first_name} {self.last_name}'
+
     def __str__(self):
         return self.email
 
