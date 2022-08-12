@@ -42,6 +42,9 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'store.apps.StoreConfig',
     'cart.apps.CartConfig',
+    'order.apps.OrderConfig',
+    # Django admin documentation generator
+    'django.contrib.admindocs',
 ]
 
 MIDDLEWARE = [

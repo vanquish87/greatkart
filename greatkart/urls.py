@@ -21,11 +21,14 @@ from django.conf.urls.static import static
 from . import views
 
 urlpatterns = [
+    path('admin/doc/', include('django.contrib.admindocs.urls')),
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
     path('accounts/', include('accounts.urls')),
     path('store/', include('store.urls')),
     path('cart/', include('cart.urls')),
+    # ORDERS
+    path('orders/', include('order.urls')),
 ]
 
 # wierd way to tell django where image URL is, adding to urlpatterns
