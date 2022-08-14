@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, render, redirect
 
 from category.models import Category
-from .models import Product, ReviewRating
+from .models import Product, ReviewRating, ProductGallery
 from cart.models import CartItem
 from cart.views import _cart_id
 from .utils import paginationStore
@@ -66,20 +66,32 @@ def product_detail(request, category_slug, product_slug):
     if request.user.is_authenticated:
         # check if user has already bought this product
         try:
-            orderproduct = OrderProduct.objects.filter(user=request.user, product_id=single_product.id).exists()
+            orderproduct = OrderProduct.objects.filter(
+                                            user=request.user,
+                                            product_id=single_product.id
+                                            ).exists()
         except OrderProduct.DoesNotExist:
             orderproduct = None
     else:
         orderproduct = None
 
     # Get the reviews
-    reviews = ReviewRating.objects.filter(product_id=single_product.id, status=True)
+    reviews = ReviewRating.objects.filter(
+                                product_id=single_product.id,
+                                status=True
+                                )
+
+    # Get the product gallery
+    product_gallery = ProductGallery.objects.filter(
+                                product_id=single_product.id
+                                )
 
     context = {
         'single_product': single_product,
-        'in_cart'       : in_cart,
+        'in_cart': in_cart,
         'orderproduct': orderproduct,
         'reviews': reviews,
+        'product_gallery': product_gallery,
         }
     return render(request, 'store/product-detail.html', context)
 
@@ -117,10 +129,16 @@ def submit_review(request, product_id):
     if request.method == 'POST':
         try:
             # overwriting already submitted review
-            review = ReviewRating.objects.get(user__id=request.user.id, product__id=product_id)
+            review = ReviewRating.objects.get(
+                                        user__id=request.user.id,
+                                        product__id=product_id
+                                        )
             form = ReviewForm(request.POST, instance=review)
             form.save()
-            messages.success(request, 'Thank you! Your review has been updated.')
+            messages.success(
+                    request,
+                    'Thank you! Your review has been updated.'
+                    )
             return redirect(url)
 
         except ReviewRating.DoesNotExist:
@@ -134,5 +152,8 @@ def submit_review(request, product_id):
                 data.product_id = product_id
                 data.user_id = request.user.id
                 data.save()
-                messages.success(request, 'Thank you! Your review has been submitted.')
+                messages.success(
+                        request,
+                        'Thank you! Your review has been submitted.'
+                        )
                 return redirect(url)

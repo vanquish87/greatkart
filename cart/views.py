@@ -47,7 +47,10 @@ def add_cart(request, product_id):
                 ).exists()
         # add items to cart or create cart items
         if is_cart_item_exists:
-            cart_item = CartItem.objects.filter(product=product, user=current_user)
+            cart_item = CartItem.objects.filter(
+                                        product=product,
+                                        user=current_user
+                                        )
             ex_var_list = []
             id = []
             # check for existing variations in selected cart_item
@@ -253,7 +256,10 @@ def cart(request):
     try:
         # check if user is logged in
         if request.user.is_authenticated:
-            cart_items = CartItem.objects.filter(user=request.user, is_active=True)
+            cart_items = CartItem.objects.filter(
+                                        user=request.user,
+                                        is_active=True
+                                        )
 
         else:
             cart = Cart.objects.get(cart_id=_cart_id(request))
@@ -290,7 +296,10 @@ def checkout(request):
     try:
         # check if user is logged in
         if request.user.is_authenticated:
-            cart_items = CartItem.objects.filter(user=request.user, is_active=True)
+            cart_items = CartItem.objects.filter(
+                                        user=request.user,
+                                        is_active=True
+                                        )
         else:
             cart = Cart.objects.get(cart_id=_cart_id(request))
             cart_items = CartItem.objects.filter(cart=cart, is_active=True)
