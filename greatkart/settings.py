@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+# from python-decouple
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,10 +22,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-6l#gi_)-q#=tqvyp^d4i4p9gakc2-+2(z-=5irwyr_trp)er+*'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = []
 
@@ -166,7 +168,7 @@ MESSAGE_TAGS = {
 # SMTP configuration
 EMAIL_HOST = 'smtppro.zoho.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'admin@shutupnwait.com'
-EMAIL_HOST_PASSWORD = 'v@lue)67e4'
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'admin@shutupnwait.com'

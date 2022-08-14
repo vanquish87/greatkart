@@ -12,16 +12,20 @@ from django.template.loader import render_to_string
 
 def payments(request):
     body = json.loads(request.body)
-    order = Order.objects.get(user=request.user, is_ordered=False, order_number=body['orderID'])
+    order = Order.objects.get(
+                    user=request.user,
+                    is_ordered=False,
+                    order_number=body['orderID']
+                    )
 
     # Store transaction details inside Payment model
     payment = Payment(
-        user = request.user,
-        payment_id = body['transID'],
-        payment_method = body['payment_method'],
-        amount_paid = order.order_total,
-        status = body['status'],
-    )
+            user=request.user,
+            payment_id=body['transID'],
+            payment_method=body['payment_method'],
+            amount_paid=order.order_total,
+            status=body['status'],
+            )
     payment.save()
 
     order.payment = payment
@@ -52,7 +56,6 @@ def payments(request):
         orderproduct.variations.set(product_variation)
         orderproduct.save()
 
-
         # Reduce the quantity of the sold products
         product = Product.objects.get(id=item.product_id)
         product.stock -= item.quantity
@@ -71,13 +74,15 @@ def payments(request):
     send_email = EmailMessage(mail_subject, message, to=[to_email])
     send_email.send()
 
-    # Send order number and transaction id back to sendData method via JsonResponse
+    # Send order number and transaction id back to
+    # sendData method via JsonResponse
     # sendData is back into Paypal js code in payments.html
     data = {
         'order_number': order.order_number,
         'transID': payment.payment_id,
     }
     return JsonResponse(data)
+
 
 def place_order(request, total=0, quantity=0,):
     current_user = request.user
@@ -124,14 +129,18 @@ def place_order(request, total=0, quantity=0,):
             yr = int(datetime.date.today().strftime('%Y'))
             dt = int(datetime.date.today().strftime('%d'))
             mt = int(datetime.date.today().strftime('%m'))
-            d = datetime.date(yr,mt,dt)
+            d = datetime.date(yr, mt, dt)
 
-            current_date = d.strftime("%Y%m%d") #20210305
+            current_date = d.strftime("%Y%m%d")    # 20210305
             order_number = current_date + str(data.id)
             data.order_number = order_number
             data.save()
 
-            order = Order.objects.get(user=current_user, is_ordered=False, order_number=order_number)
+            order = Order.objects.get(
+                                user=current_user,
+                                is_ordered=False,
+                                order_number=order_number
+                                )
             context = {
                 'order': order,
                 'cart_items': cart_items,

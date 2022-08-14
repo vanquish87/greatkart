@@ -21,8 +21,8 @@ from django.conf.urls.static import static
 from . import views
 
 urlpatterns = [
-    path('admin/doc/', include('django.contrib.admindocs.urls')),
-    path('admin/', admin.site.urls),
+    path('securelogin/doc/', include('django.contrib.admindocs.urls')),
+    path('securelogin/', admin.site.urls),
     path('', views.home, name='home'),
     path('accounts/', include('accounts.urls')),
     path('store/', include('store.urls')),
